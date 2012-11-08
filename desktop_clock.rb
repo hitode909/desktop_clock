@@ -28,33 +28,31 @@ class ImageSearch
 
   def initialize(query)
     @query = query
-
+    @called_count = 0
   end
 
-  def search
+  def get
+    start = @called_count / 8
+
     params = {
       :key => API_KEY,
       :v => '1.0',
       :save => 'off',
       :rsz => 8,
       :q => @query,
+      :start => start
     }
 
     uri = ENDPOINT + '?' + URI.encode_www_form(params)
 
-    @result = JSON.parse(open(Mirror.file(uri)).read)
-  end
+    res = JSON.parse(open(Mirror.file(uri)).read)
 
-  def urls
-    search unless @result
+    @called_count += 1
+    @called_count = 0 if @called_count >= 64
 
-    @result['responseData']['results'].map{ |item|
+    res['responseData']['results'].map{ |item|
       item['unescapedUrl']
-    }
-  end
-
-  def sample
-    urls.sample
+    }[@called_count % 8]
   end
 end
 
@@ -75,7 +73,7 @@ class Clock
 
       number = letter.to_i
 
-      image = Magick::ImageList.new Mirror.file(@numbers[number].sample)
+      image = Magick::ImageList.new Mirror.file(@numbers[number].get)
 
       base = append(base, image, index * number_width, 0)
     }
