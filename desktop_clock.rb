@@ -68,7 +68,7 @@ class Clock
       self.background_color = 'white'
     }
 
-    ("%02d %02d" % [ now.hour, now.min]).split(//).each_with_index{ |letter, index|
+    ("%02d%02d" % [ now.hour, now.min]).split(//).each_with_index{ |letter, index|
       next if letter == ' '
 
       number = letter.to_i
@@ -106,7 +106,7 @@ class Clock
   end
 
   def number_width
-    image_width / 5
+    image_width / 4
   end
 
   def number_height
