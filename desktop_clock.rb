@@ -64,7 +64,7 @@ class Clock
   def process
     now = Time.now
 
-    base = Magick::Image.new(1440, 900){
+    base = Magick::Image.new(image_width, image_height){
       self.background_color = 'white'
     }
 
@@ -97,12 +97,20 @@ class Clock
     system 'osascript', '-e', script
   end
 
+  def image_width
+    1440
+  end
+
+  def image_height
+    900
+  end
+
   def number_width
-    1440 / 5
+    image_width / 5
   end
 
   def number_height
-    900
+    image_height
   end
 end
 
