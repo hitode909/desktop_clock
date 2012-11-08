@@ -83,6 +83,11 @@ class Clock
     base.write(path)
 
     set_desktop(path)
+
+    Thread.new {
+      sleep 50
+      File.unlink(path)
+    }
   end
 
   def append(base, image, x, y)
